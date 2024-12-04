@@ -1,7 +1,7 @@
 #include <shadering/VAO.hpp>
 
 
-void VAO::assignAll(std::vector<float>* vertices, std::vector<int>* indices) {
+void VAO::assignAll(std::vector<float>* vertices, std::vector<unsigned int>* indices, int vertStride) {
 	//Bind vertex array object (from now on what we do with buffer is being stored inside VAO until we unbind)
 	glBindVertexArray(vao_);
 	// Copy our vertices array to inside GL_ARRAY_BUFFER (binded to VBO)
@@ -12,10 +12,10 @@ void VAO::assignAll(std::vector<float>* vertices, std::vector<int>* indices) {
 	if (indices)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(vertices->front()), &vertices->front(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(indices->front()), &indices->front(), GL_STATIC_DRAW);
 	}
 	// set our vertex attribs
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertStride * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 }
 

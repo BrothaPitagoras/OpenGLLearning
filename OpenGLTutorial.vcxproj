@@ -150,7 +150,9 @@
     <ClCompile Include="src\render\renderObjects\renderObject.cpp" />
     <ClCompile Include="src\shadering\Shader.cpp" />
     <ClCompile Include="src\shadering\shadering.cpp" />
+    <ClCompile Include="src\shadering\Texture.cpp" />
     <ClCompile Include="src\shadering\VAO.cpp" />
+    <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\windowing\windowing.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,8 +163,10 @@
     <ClInclude Include="includes\includes.h" />
     <ClInclude Include="includes\render\renderObjects\renderObject.hpp" />
     <ClInclude Include="includes\shadering\Shader.hpp" />
+    <ClInclude Include="includes\shadering\Texture.hpp" />
     <ClInclude Include="includes\shadering\VAO.hpp" />
     <ClInclude Include="includes\shadering\shadering.hpp" />
+    <ClInclude Include="includes\stb_image.h" />
     <ClInclude Include="includes\windowing\windowing.hpp" />
   </ItemGroup>
   <ItemGroup>

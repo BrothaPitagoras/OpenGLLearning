@@ -13,7 +13,7 @@ public:
 	VAO();
 	~VAO();
 
-	void assignAll(std::vector<float>* vertices, std::vector<int>* indices);
+	void assignAll(std::vector<float>* vertices, std::vector<unsigned int>* indices, int vertStride);
 
 	// We only need to change the vertices due to previously already assigning everything (attribs and maybe element buffer object)
 	void assignVertices(std::vector<float>& vertices);

@@ -5,6 +5,7 @@
 #include <shadering/VAO.hpp>
 #include <shadering/Shader.hpp>
 #include <render/renderObjects/renderObject.hpp>
+#include <shadering/Texture.hpp>
 
 
 void processInput(GLFWwindow* window);
@@ -14,10 +15,16 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 std::vector<float> vertices {
-    // first triangle
-    -0.5f,  -0.5f, 0.0f,// 1.0f, 0.0f, 0.0f,  // bottom left
-    0.5f, -0.5f, 0.0f, //0.0f, 1.0f, 0.0f, // bottom right
-   0.0f,  0.5f, 0.0f  //0.0f, 0.0f, 1.0f // top
+    // positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+};
+
+std::vector<unsigned int> indices {
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
 };
 
 int main()
@@ -38,7 +45,20 @@ int main()
     Shader shader = Shader("C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/vertex.glsl", "C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/frag.glsl");
     VAO vaoOne = VAO();
 
-    renderObject triangle1 = renderObject(&vaoOne, vertices);
+    renderObject triangle1 = renderObject(&vaoOne, vertices, indices, true, true);
+
+
+
+    // LOADING TEXTURE
+    Texture texture1 = Texture("C:/Games/OpenGLTutorial/OpenGLTutorial/textures/container.jpg");
+    Texture texture2 = Texture("C:/Games/OpenGLTutorial/OpenGLTutorial/textures/awesomeface.png");
+
+    shader.use();
+    shader.setUniformInt("texture1", texture1.texture);
+    shader.setUniformInt("texture2", texture2.texture);
+    // STOP LOADING TEXTURE
+
+
     // Render Loop
     // ----------------------------------------------
     while (!glfwWindowShouldClose(window))
@@ -53,13 +73,17 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         //Gets the variable uniform declared on the shader
+        Texture::bind(GL_TEXTURE1, texture1.texture);
+        Texture::bind(GL_TEXTURE2, texture2.texture);
         shader.use();
-        // to change the uniform u must use the shader program before, because it changes the uniform on the active shader program
+
         vaoOne.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // to change the uniform u must use the shader program before, because it changes the uniform on the active shader program
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
