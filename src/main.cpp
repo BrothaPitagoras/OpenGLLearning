@@ -6,6 +6,9 @@
 #include <shadering/Shader.hpp>
 #include <render/renderObjects/renderObject.hpp>
 #include <shadering/Texture.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 void processInput(GLFWwindow* window);
@@ -57,6 +60,12 @@ int main()
     shader.setUniformInt("texture1", texture1.texture);
     shader.setUniformInt("texture2", texture2.texture);
     // STOP LOADING TEXTURE
+
+
+    glm::mat4 transMat = glm::mat4(1.0f);
+    
+    transMat = glm::rotate(transMat, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    transMat = glm::scale(transMat, glm::vec3(0.5, 0.5, 0.5));
 
 
     // Render Loop
