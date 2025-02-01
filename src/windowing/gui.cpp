@@ -40,7 +40,10 @@ void ImGui_Impl::Update()
         ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
         ImGui::SliderFloat("scale_factor for model: ", &Model::scale_factor, 0.4f, 3.0f);
-
+        ImGui::SliderFloat("mov_speed for model: ", &Model::model_mov_speed_factor, 0.5f, 5.0f);
+        ImGui::Checkbox("Control Light", &Model::control_light);
+        
+        ImGui::Text("Light Pos x:%.2f y:%.2f z:%.2f ", Model::lightPosition_.x , Model::lightPosition_.y, Model::lightPosition_.z);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
         ImGui::End();
     }

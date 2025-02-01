@@ -21,18 +21,18 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-//std::vector<glm::vec3> cubePositions = {
-//    glm::vec3(0.0f,  0.0f,  0.0f),
-//    glm::vec3(2.0f,  5.0f, -15.0f),
-//    glm::vec3(-1.5f, -2.2f, -2.5f),
-//    glm::vec3(-3.8f, -2.0f, -12.3f),
-//    glm::vec3(2.4f, -0.4f, -3.5f),
-//    glm::vec3(-1.7f,  3.0f, -7.5f),
-//    glm::vec3(1.3f, -2.0f, -2.5f),
-//    glm::vec3(1.5f,  2.0f, -2.5f),
-//    glm::vec3(1.5f,  0.2f, -1.5f),
-//    glm::vec3(-1.3f,  1.0f, -1.5f)
-//};
+std::vector<glm::vec3> cubePositions = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f,  2.0f, -2.5f),
+    glm::vec3(1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+};
 
 std::vector<float> vertices {
 
@@ -91,7 +91,6 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 //std::vector<unsigned int> indices {
 //        0, 1, 3, // first triangle
@@ -160,10 +159,13 @@ int main()
         //Bind the textures
         //Texture::bind(GL_TEXTURE1, texture1.texture);
         //Texture::bind(GL_TEXTURE2, texture2.texture);
-        float yoffset = cos(glm::radians(90.0f) * glfwGetTime());
-        float xoffset = sin(glm::radians(90.0f) * glfwGetTime());
 
-        glm::vec3 variableLightPos = glm::vec3(xoffset, yoffset, lightPos.z);
+        if (!Model::control_light)
+        {
+            Model::lightPosition_.x = sin(glm::radians(90.0f) * glfwGetTime());
+            Model::lightPosition_.y = cos(glm::radians(90.0f) * glfwGetTime());
+        }
+
         //activate shader
         lightingShader.use();
         vaoOne.bind();
@@ -184,7 +186,11 @@ int main()
         lightingShader.setVec3("light.ambient", ambientColor);
         lightingShader.setVec3("light.diffuse", diffuseColor);
         lightingShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        lightingShader.setVec3("light.position", variableLightPos);
+        lightingShader.setVec3("light.position", glm::vec3(Model::lightPosition_));
+        
+        lightingShader.setUniformFloat("light.constant", 1.0f);
+        lightingShader.setUniformFloat("light.linear", 0.09f);
+        lightingShader.setUniformFloat("light.quadratic", 0.032f);
 
         lightingShader.setVec3("viewPos", camera.Position);
 
@@ -197,9 +203,17 @@ int main()
         lightingShader.setMat4("view", view);
 
         //render the boxes
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(Model::scale_factor));
-        lightingShader.setMat4("model", model);
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            model = glm::scale(model, glm::vec3(Model::scale_factor));
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            lightingShader.setMat4("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        }
 
         glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
@@ -208,8 +222,8 @@ int main()
         lightCubeShader.setMat4("view", view);
         lightCubeShader.setVec3("lightColor", lightColor);
 
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, variableLightPos);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, Model::lightPosition_);
         model = glm::scale(model, glm::vec3(0.2f));
         lightCubeShader.setMat4("model", model);
             
@@ -250,6 +264,22 @@ void processInput(Window* myWindowType)
 
     if (myWindowType->pressedKey(GLFW_KEY_ESCAPE))
         myWindowType->close();
+    
+    if (Model::control_light)
+    {
+        if (myWindowType->pressedKey(GLFW_KEY_DOWN))
+            Model::lightPosition_.z += Model::model_mov_speed_factor * deltaTime;
+        if (myWindowType->pressedKey(GLFW_KEY_UP))
+            Model::lightPosition_.z -= Model::model_mov_speed_factor * deltaTime;
+        if (myWindowType->pressedKey(GLFW_KEY_RIGHT))
+            Model::lightPosition_.x += Model::model_mov_speed_factor * deltaTime;
+        if (myWindowType->pressedKey(GLFW_KEY_LEFT))
+            Model::lightPosition_.x -= Model::model_mov_speed_factor * deltaTime;
+        if (myWindowType->pressedKey(GLFW_KEY_RIGHT_CONTROL))
+            Model::lightPosition_.y -= Model::model_mov_speed_factor * deltaTime;
+        if (myWindowType->pressedKey(GLFW_KEY_RIGHT_SHIFT))
+            Model::lightPosition_.y += Model::model_mov_speed_factor * deltaTime;
+    }
 
     if (myWindowType->pressedKey(GLFW_KEY_SPACE))
         camera.ProcessKeyboard(UP, deltaTime);
