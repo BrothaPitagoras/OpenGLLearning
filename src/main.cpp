@@ -179,20 +179,24 @@ int main()
         
         lightingShader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
         lightingShader.setUniformFloat("material.shininess", 32.0f);
-        container_tex.activateAndBind(GL_TEXTURE0);
-        container_tex_specular.activateAndBind(GL_TEXTURE1);
+        
 
         //set light uniforms
-        lightingShader.setVec3("light.ambient", ambientColor);
-        lightingShader.setVec3("light.diffuse", diffuseColor);
+        lightingShader.setVec3("light.position", camera.Position);
+        lightingShader.setVec3("light.direction", camera.Front);
+        lightingShader.setUniformFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        lightingShader.setUniformFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+        lightingShader.setVec3("viewPos", camera.Position);
+
+        //light properties
+        lightingShader.setVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+        lightingShader.setVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
         lightingShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        lightingShader.setVec3("light.position", glm::vec3(Model::lightPosition_));
         
         lightingShader.setUniformFloat("light.constant", 1.0f);
         lightingShader.setUniformFloat("light.linear", 0.09f);
         lightingShader.setUniformFloat("light.quadratic", 0.032f);
 
-        lightingShader.setVec3("viewPos", camera.Position);
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) window.width / (float) window.height, 0.1f, 100.0f);
@@ -202,6 +206,11 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMat4("view", view);
 
+        container_tex.activateAndBind(GL_TEXTURE0);
+        container_tex_specular.activateAndBind(GL_TEXTURE1);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        lightingShader.setMat4("model", model);
         //render the boxes
         for (unsigned int i = 0; i < 10; i++)
         {
@@ -215,20 +224,18 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, vertices.size());
         }
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        //lightCubeShader.use();
+        //lightCubeShader.setMat4("projection", projection);
+        //lightCubeShader.setMat4("view", view);
+        //lightCubeShader.setVec3("lightColor", lightColor);
 
-        lightCubeShader.use();
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
-        lightCubeShader.setVec3("lightColor", lightColor);
-
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, Model::lightPosition_);
-        model = glm::scale(model, glm::vec3(0.2f));
-        lightCubeShader.setMat4("model", model);
-            
-        lightVao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        //glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::translate(model, Model::lightPosition_);
+        //model = glm::scale(model, glm::vec3(0.2f));
+        //lightCubeShader.setMat4("model", model);
+        //    
+        //lightVao.bind();
+        //glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 
         // to change the uniform u must use the shader program before, because it changes the uniform on the active shader program
