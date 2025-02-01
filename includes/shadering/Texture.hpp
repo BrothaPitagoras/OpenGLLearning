@@ -7,7 +7,7 @@ class Texture
 {
 public:
 	int texWidth, texHeight, nrChannels;
-	unsigned int texture;
+	unsigned int textureId; // GL_TEXTURE0 until GL_TEXTURE31
 	unsigned char* data;
 
 	Texture(const std::string& texturePath);
@@ -15,7 +15,7 @@ public:
 
 	void bind();
 
-	static void bind(GLenum gl_texture ,unsigned int texture);
+	void activateAndBind(unsigned int activationIndex);
 
 private:
 

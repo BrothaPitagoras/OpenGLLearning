@@ -1,10 +1,8 @@
 #include <shadering/Texture.hpp>
 
 Texture::Texture(const std::string& texturePath) {
-
-    glGenTextures(1, &this->texture);
-
-    glBindTexture(GL_TEXTURE_2D, this->texture);
+    glGenTextures(1, &this->textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -38,10 +36,14 @@ Texture::~Texture() {
 }
 
 void Texture::bind() {
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, textureId);
 }
 
-void Texture::bind(GLenum gl_texture, unsigned int texture) {
-    glActiveTexture(gl_texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+void Texture::activateAndBind(unsigned int activationIndex) {
+    // The main purpose of texture units is to allow us to use more than 1 texture in our shaders.
+    // By assigning texture units to the samplers, we can bind to multiple textures at once as long 
+    // as we activate the corresponding texture unit first. 
+    // Just like glBindTexture we can activate texture units using glActiveTexture passing in the texture unit we'd like to use
+    glActiveTexture(activationIndex);
+    glBindTexture(GL_TEXTURE_2D, textureId);
 }
