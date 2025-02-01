@@ -21,7 +21,7 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\windowing\windowing.cpp">
+    <ClCompile Include="src\windowing\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\shadering\shadering.cpp">
@@ -48,6 +48,9 @@
     <ClCompile Include="external_includes\glm\glm.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external_includes\GLFW\glfw3.h">
@@ -62,7 +65,7 @@
     <ClInclude Include="external_includes\KHR\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\windowing\windowing.hpp">
+    <ClInclude Include="includes\windowing\Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\includes.h">
@@ -948,6 +951,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="external_includes\glm\vector_relational.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\render\Camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -149,13 +149,14 @@
     <ClCompile Include="external_includes\glm\glm.cppm" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\render\Camera.cpp" />
     <ClCompile Include="src\render\renderObjects\renderObject.cpp" />
     <ClCompile Include="src\shadering\Shader.cpp" />
     <ClCompile Include="src\shadering\shadering.cpp" />
     <ClCompile Include="src\shadering\Texture.cpp" />
     <ClCompile Include="src\shadering\VAO.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
-    <ClCompile Include="src\windowing\windowing.cpp" />
+    <ClCompile Include="src\windowing\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external_includes\glad\glad.h" />
@@ -451,13 +452,14 @@
     <ClInclude Include="external_includes\glm\vector_relational.hpp" />
     <ClInclude Include="external_includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\includes.h" />
+    <ClInclude Include="includes\render\Camera.hpp" />
     <ClInclude Include="includes\render\renderObjects\renderObject.hpp" />
     <ClInclude Include="includes\shadering\Shader.hpp" />
     <ClInclude Include="includes\shadering\Texture.hpp" />
     <ClInclude Include="includes\shadering\VAO.hpp" />
     <ClInclude Include="includes\shadering\shadering.hpp" />
     <ClInclude Include="includes\stb_image.h" />
-    <ClInclude Include="includes\windowing\windowing.hpp" />
+    <ClInclude Include="includes\windowing\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external_libs\glfw3.lib" />

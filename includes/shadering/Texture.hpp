@@ -1,3 +1,5 @@
+#pragma once
+
 #include <includes.h>
 #include <stb_image.h>
 

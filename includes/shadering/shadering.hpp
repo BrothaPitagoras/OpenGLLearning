@@ -1,8 +1,9 @@
+#pragma once
+
 #include <includes.h>
 #include <fstream>
 #include <sstream>
 
-#pragma once
 
 namespace shadering{
 

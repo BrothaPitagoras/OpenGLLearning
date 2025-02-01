@@ -1,7 +1,7 @@
 #include <shadering/VAO.hpp>
 
 
-void VAO::assignAll(std::vector<float>* vertices, std::vector<unsigned int>* indices, int vertStride) {
+void VAO::assignAll(std::vector<float> *vertices, std::vector<unsigned int> *indices, int vertStride) {
 	//Bind vertex array object (from now on what we do with buffer is being stored inside VAO until we unbind)
 	glBindVertexArray(vao_);
 	// Copy our vertices array to inside GL_ARRAY_BUFFER (binded to VBO)

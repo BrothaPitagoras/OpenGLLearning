@@ -5,11 +5,11 @@
 class renderObject
 {
 public:
-	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<float> *vertices;
+	std::vector<unsigned int> *indices;
 	VAO* vertexArrayObject;
 
-	renderObject(VAO* vao, std::vector<float> vertices, std::vector<unsigned int> indices, bool color = false, bool texture = false);
+	renderObject(VAO* vao, std::vector<float> *vertices, std::vector<unsigned int> *indices, bool normal = false, bool color = false, bool texture = false);
 	~renderObject();
 
 
