@@ -1,6 +1,8 @@
 #pragma once
 
+#include <includes.h>
 #include <GLFW/glfw3.h>
+#include <windowing/gui.hpp>
 
 class Window {
 public:
@@ -10,9 +12,15 @@ public:
 	unsigned int width;
 	unsigned int height;
 
+	const char* glsl_version = "#version 460";
+
 	float lastX;
 	float lastY;
 	bool firstMouse;
+
+	bool captureMouseInput;
+
+	std::unique_ptr<ImGui_Impl> imgui_window;
 
 	Window(const unsigned int width, const unsigned int height);
 
@@ -24,6 +32,8 @@ public:
 
 	void setScrollCallback(GLFWscrollfun callback);
 
+	void setKeyboardCallback(GLFWkeyfun callback);
+
 	bool pressedKey(int key);
 
 	bool shouldClose();
@@ -31,6 +41,8 @@ public:
 	void close();
 
 	void captureAndHideCursor();
+
+	void stopHidingCursor();
 
 private:
 

@@ -1,6 +1,7 @@
 
 #include <includes.h>
 #include <windowing/Window.hpp>
+#include <windowing/gui.hpp>
 #include <shadering/shadering.hpp>
 #include <shadering/VAO.hpp>
 #include <shadering/Shader.hpp>
@@ -10,8 +11,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <data/data.hpp>
 
 
+void custom_keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processInput(Window* window);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -94,14 +97,14 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 //        1, 2, 3  // second triangle
 //};
 
+
 int main()
 {
     Window window(SCR_WIDTH, SCR_HEIGHT);
 
     window.setMouseCallback(mouse_callback);
     window.setScrollCallback(scroll_callback);
-
-    window.captureAndHideCursor();
+    window.setKeyboardCallback(custom_keyboard_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -130,6 +133,7 @@ int main()
     
     glEnable(GL_DEPTH_TEST);
 
+
     // Render Loop
     // ----------------------------------------------
     while (!window.shouldClose())
@@ -139,10 +143,10 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // Input
-        // -----------------
-        processInput(&window);
+        glfwPollEvents();
 
+        processInput(&window);
+        
         // Render
         // -----------------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -174,6 +178,7 @@ int main()
 
         //render the boxes
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(Model::scale_factor));
         lightingShader.setMat4("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, vertices.size());
@@ -196,10 +201,14 @@ int main()
         //glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 
+        //Imgui related window stuff;
+        window.imgui_window->NewFrame();
+        window.imgui_window->Update();
+        window.imgui_window->Render();
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window.glfw_window);
-        glfwPollEvents();
     }
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
@@ -210,26 +219,54 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(Window* window)
+void processInput(Window* myWindowType)
 {
-    if (window->pressedKey(GLFW_KEY_ESCAPE))
-        window->close();
+    ImGuiIO& io = ImGui::GetIO();
 
-    if (window->pressedKey(GLFW_KEY_SPACE))
+    if (io.WantCaptureKeyboard)
+    {
+        return;
+    }
+
+    if (myWindowType->pressedKey(GLFW_KEY_ESCAPE))
+        myWindowType->close();
+
+    if (myWindowType->pressedKey(GLFW_KEY_SPACE))
         camera.ProcessKeyboard(UP, deltaTime);
-    if (window->pressedKey(GLFW_KEY_LEFT_CONTROL))
+    if (myWindowType->pressedKey(GLFW_KEY_LEFT_CONTROL))
         camera.ProcessKeyboard(DOWN, deltaTime);
-    if (window->pressedKey(GLFW_KEY_W))
+    if (myWindowType->pressedKey(GLFW_KEY_W))
         camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (window->pressedKey(GLFW_KEY_S))
+    if (myWindowType->pressedKey(GLFW_KEY_S))
         camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (window->pressedKey(GLFW_KEY_D))
+    if (myWindowType->pressedKey(GLFW_KEY_D))
         camera.ProcessKeyboard(RIGHT, deltaTime);
-    if (window->pressedKey(GLFW_KEY_A))
+    if (myWindowType->pressedKey(GLFW_KEY_A))
         camera.ProcessKeyboard(LEFT, deltaTime);
 }
 
+void custom_keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+        Window* myWindowType = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        myWindowType->captureMouseInput = !myWindowType->captureMouseInput;
+        myWindowType->imgui_window->show_main_window = !myWindowType->imgui_window->show_main_window;
+        if (myWindowType->captureMouseInput)
+        {
+            myWindowType->captureAndHideCursor();
+        }
+        else {
+            myWindowType->stopHidingCursor();
+        }
+    }
+
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+}
+
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
+    
+    ImGuiIO& io = ImGui::GetIO();
+
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -248,14 +285,27 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
     myWindowType->lastX = xpos;
     myWindowType->lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if (!io.WantCaptureMouse && myWindowType->captureMouseInput)
+    {
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
+
+    ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    ImGuiIO& io = ImGui::GetIO();
+
+    if (!io.WantCaptureMouse)
+    {
+        camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    }
+
+    ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+
 }
 
 

@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\includes;C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes\imgui;C:\Games\OpenGLTutorial\OpenGLTutorial\includes;C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,7 +134,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\includes;C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes\imgui;C:\Games\OpenGLTutorial\OpenGLTutorial\includes;C:\Games\OpenGLTutorial\OpenGLTutorial\external_includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +147,13 @@
   <ItemGroup>
     <ClCompile Include="external_includes\glm\detail\glm.cpp" />
     <ClCompile Include="external_includes\glm\glm.cppm" />
+    <ClCompile Include="external_includes\imgui\imgui.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external_includes\imgui\imgui_widgets.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\render\Camera.cpp" />
@@ -156,6 +163,7 @@
     <ClCompile Include="src\shadering\Texture.cpp" />
     <ClCompile Include="src\shadering\VAO.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
+    <ClCompile Include="src\windowing\gui.cpp" />
     <ClCompile Include="src\windowing\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -450,7 +458,17 @@
     <ClInclude Include="external_includes\glm\vec3.hpp" />
     <ClInclude Include="external_includes\glm\vec4.hpp" />
     <ClInclude Include="external_includes\glm\vector_relational.hpp" />
+    <ClInclude Include="external_includes\imgui\imconfig.h" />
+    <ClInclude Include="external_includes\imgui\imgui.h" />
+    <ClInclude Include="external_includes\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="external_includes\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="external_includes\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="external_includes\imgui\imgui_internal.h" />
+    <ClInclude Include="external_includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="external_includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="external_includes\imgui\imstb_truetype.h" />
     <ClInclude Include="external_includes\KHR\khrplatform.h" />
+    <ClInclude Include="includes\data\data.hpp" />
     <ClInclude Include="includes\includes.h" />
     <ClInclude Include="includes\render\Camera.hpp" />
     <ClInclude Include="includes\render\renderObjects\renderObject.hpp" />
@@ -459,6 +477,7 @@
     <ClInclude Include="includes\shadering\VAO.hpp" />
     <ClInclude Include="includes\shadering\shadering.hpp" />
     <ClInclude Include="includes\stb_image.h" />
+    <ClInclude Include="includes\windowing\gui.hpp" />
     <ClInclude Include="includes\windowing\Window.hpp" />
   </ItemGroup>
   <ItemGroup>

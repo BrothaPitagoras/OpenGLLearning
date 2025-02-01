@@ -1,4 +1,3 @@
-#include <includes.h>
 #include <windowing/Window.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -9,11 +8,16 @@ Window::Window(const unsigned int window_width, const unsigned int window_height
     lastX = width / 2.0f;
     lastY = height / 2.0f;
     firstMouse = true;
+    captureMouseInput = true;
     Window::initializeGFLWWithHints();
     Window::createWindowWithCallbacks(width, height);
 
     //This sets a user pointer so that you can access the pointer from anywhere that is using this glfw window (great for callbacks which the signature cant be changed)
     glfwSetWindowUserPointer(glfw_window, this);
+
+    imgui_window = std::make_unique<ImGui_Impl>(glfw_window, glsl_version);
+
+    captureAndHideCursor();
 }
 
 void Window::initializeGFLWWithHints() {
@@ -62,6 +66,11 @@ void Window::setScrollCallback(GLFWscrollfun callback)
     glfwSetScrollCallback(glfw_window, callback);
 }
 
+void Window::setKeyboardCallback(GLFWkeyfun callback)
+{
+    glfwSetKeyCallback(glfw_window, callback);
+}
+
 bool Window::pressedKey(int key)
 {
     return glfwGetKey(glfw_window, key) == GLFW_PRESS;
@@ -81,4 +90,10 @@ void Window::captureAndHideCursor()
 {
     // tell GLFW to capture our mouse
     glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void Window::stopHidingCursor()
+{
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
