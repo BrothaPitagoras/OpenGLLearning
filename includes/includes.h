@@ -15,5 +15,8 @@
 #include <tchar.h>
 
 // useful includes
+#include <format>
+#include <string>
+#include <string_view>
 #include <iostream>
 #include <vector>

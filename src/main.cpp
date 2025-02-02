@@ -80,6 +80,13 @@ std::vector<float> vertices {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 };
 
+std::vector<glm::vec3> pointLightPositions = {
+    glm::vec3(0.7f,  0.2f,  2.0f),
+    glm::vec3(2.3f, -3.3f, -4.0f),
+    glm::vec3(-4.0f,  2.0f, -12.0f),
+    glm::vec3(0.0f,  0.0f, -3.0f)
+};
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -160,43 +167,51 @@ int main()
         //Texture::bind(GL_TEXTURE1, texture1.texture);
         //Texture::bind(GL_TEXTURE2, texture2.texture);
 
-        if (!Model::control_light)
-        {
-            Model::lightPosition_.x = sin(glm::radians(90.0f) * glfwGetTime());
-            Model::lightPosition_.y = cos(glm::radians(90.0f) * glfwGetTime());
-        }
+        //if (!Model::control_light)
+        //{
+        //    Model::lightPosition_.x = sin(glm::radians(90.0f) * glfwGetTime());
+        //    Model::lightPosition_.y = cos(glm::radians(90.0f) * glfwGetTime());
+        //}
 
         //activate shader
         lightingShader.use();
         vaoOne.bind();
         
-        glm::vec3 lightColor = glm::vec3(1.0f);
-       
-        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-
         //set material uniforms
-        
-        lightingShader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
         lightingShader.setUniformFloat("material.shininess", 32.0f);
+
+        // set dirLight
+        lightingShader.setVec3("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+        lightingShader.setVec3("dirLight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+        lightingShader.setVec3("dirLight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+        lightingShader.setVec3("dirLight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+
+        //set spotlight
+        lightingShader.setVec3("spotLight.position", camera.Position);
+        lightingShader.setVec3("spotLight.direction", camera.Front);
+        lightingShader.setUniformFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        lightingShader.setUniformFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+        lightingShader.setVec3("spotLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+        lightingShader.setVec3("spotLight.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+        lightingShader.setVec3("spotLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        lightingShader.setUniformFloat("spotLight.constant", 1.0f);
+        lightingShader.setUniformFloat("spotLight.linear", 0.09f);
+        lightingShader.setUniformFloat("spotLight.quadratic", 0.032f);
+
+        //set pointLights
+        for (unsigned int i = 0; i < pointLightPositions.size(); i++)
+        {
+            lightingShader.setVec3(std::format("pointLights[{}].position", i), pointLightPositions.at(i));
+            lightingShader.setVec3(std::format("pointLights[{}].ambient", i), glm::vec3(0.2f, 0.2f, 0.2f));
+            lightingShader.setVec3(std::format("pointLights[{}].diffuse", i), glm::vec3(0.5f, 0.5f, 0.5f));
+            lightingShader.setVec3(std::format("pointLights[{}].specular", i), glm::vec3(1.0f, 1.0f, 1.0f));
+            lightingShader.setUniformFloat(std::format("pointLights[{}].constant", i), 1.0f);
+            lightingShader.setUniformFloat(std::format("pointLights[{}].linear", i), 0.09f);
+            lightingShader.setUniformFloat(std::format("pointLights[{}].quadratic", i), 0.032f);
+        }
         
 
-        //set light uniforms
-        lightingShader.setVec3("light.position", camera.Position);
-        lightingShader.setVec3("light.direction", camera.Front);
-        lightingShader.setUniformFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-        lightingShader.setUniformFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
         lightingShader.setVec3("viewPos", camera.Position);
-
-        //light properties
-        lightingShader.setVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-        lightingShader.setVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-        lightingShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        
-        lightingShader.setUniformFloat("light.constant", 1.0f);
-        lightingShader.setUniformFloat("light.linear", 0.09f);
-        lightingShader.setUniformFloat("light.quadratic", 0.032f);
-
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) window.width / (float) window.height, 0.1f, 100.0f);
@@ -224,18 +239,19 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, vertices.size());
         }
 
-        //lightCubeShader.use();
-        //lightCubeShader.setMat4("projection", projection);
-        //lightCubeShader.setMat4("view", view);
-        //lightCubeShader.setVec3("lightColor", lightColor);
-
-        //glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::translate(model, Model::lightPosition_);
-        //model = glm::scale(model, glm::vec3(0.2f));
-        //lightCubeShader.setMat4("model", model);
-        //    
-        //lightVao.bind();
-        //glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        lightCubeShader.use();
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("view", view);
+        lightCubeShader.setVec3("lightColor", glm::vec3(1.0f));
+        lightVao.bind();
+        for (unsigned int i = 0; i < pointLightPositions.size(); i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, pointLightPositions.at(i));
+            model = glm::scale(model, glm::vec3(0.2f));
+            lightCubeShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        }
 
 
         // to change the uniform u must use the shader program before, because it changes the uniform on the active shader program
