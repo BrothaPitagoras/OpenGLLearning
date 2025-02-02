@@ -122,7 +122,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\external_libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,7 +142,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Games\OpenGLTutorial\OpenGLTutorial\external_libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,6 +169,8 @@
     <ClCompile Include="src\windowing\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external_includes\assimp\config.h" />
+    <ClInclude Include="external_includes\assimp\revision.h" />
     <ClInclude Include="external_includes\glad\glad.h" />
     <ClInclude Include="external_includes\GLFW\glfw3.h" />
     <ClInclude Include="external_includes\GLFW\glfw3native.h" />
@@ -481,6 +485,7 @@
     <ClInclude Include="includes\windowing\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="external_libs\assimp-vc143-mtd.lib" />
     <Library Include="external_libs\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
@@ -622,6 +627,9 @@
     <None Include="external_includes\glm\gtx\vector_angle.inl" />
     <None Include="external_includes\glm\gtx\vector_query.inl" />
     <None Include="external_includes\glm\gtx\wrap.inl" />
+    <None Include="external_libs\assimp-vc143-mtd.dll" />
+    <None Include="external_libs\assimp-vc143-mtd.exp" />
+    <None Include="external_libs\assimp-vc143-mtd.pdb" />
     <None Include="external_libs\glfw3.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

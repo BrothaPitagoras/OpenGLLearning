@@ -1013,9 +1013,16 @@
     <ClInclude Include="includes\data\data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="external_includes\assimp\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external_includes\assimp\revision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external_libs\glfw3.lib" />
+    <Library Include="external_libs\assimp-vc143-mtd.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="external_libs\glfw3.pdb" />
@@ -1433,5 +1440,8 @@
     <None Include="external_includes\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="external_libs\assimp-vc143-mtd.dll" />
+    <None Include="external_libs\assimp-vc143-mtd.pdb" />
+    <None Include="external_libs\assimp-vc143-mtd.exp" />
   </ItemGroup>
 </Project>
