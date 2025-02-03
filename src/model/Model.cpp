@@ -53,6 +53,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
+	Material mat = Material();
 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -108,6 +109,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
+	
+
 	// process material
 	if (scene->HasMaterials())
 	{
@@ -118,6 +121,9 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		// diffuse: texture_diffuseN
 		// specular: texture_specularN
 		// normal: texture_normalN
+
+		//if no textures then material
+		mat = loadMaterial(material);
 
 		// 1. diffuse maps
 		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -133,7 +139,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 	}
-	return Mesh(vertices, indices, textures);
+	return Mesh(vertices, indices, textures, mat);
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
@@ -164,6 +170,28 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		}
 	}
 	return textures;
+}
+
+Material Model::loadMaterial(aiMaterial* mat) {
+	Material material;
+	aiColor3D color(0.f, 0.f, 0.f);
+	float shininess = 0.0f;
+
+	mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+	material.Diffuse = glm::vec3(color.r, color.b, color.g);
+
+	mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+	material.Ambient = glm::vec3(color.r, color.b, color.g);
+
+	mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+	material.Specular = glm::vec3(color.r, color.b, color.g);
+
+	mat->Get(AI_MATKEY_SHININESS, shininess);
+	material.Shininess = shininess;
+
+	material.beingUsed = true;
+
+	return material;
 }
 
 unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool gamma)

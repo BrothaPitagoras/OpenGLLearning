@@ -1283,6 +1283,9 @@
     <ClInclude Include="external_includes\assimp\ZipArchiveIOSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\model\Material.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external_libs\glfw3.lib" />

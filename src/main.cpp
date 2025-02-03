@@ -65,9 +65,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Shader lightingShader = Shader("C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/objectVertex.glsl", "C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/objectFrag.glsl");
-    //Shader lightCubeShader = Shader("C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/lightVertex.glsl", "C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/lightFrag.glsl");
+    Shader lightSourceShader = Shader("C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/lightVertex.glsl", "C:/Games/OpenGLTutorial/OpenGLTutorial/shaders/lightFrag.glsl");
 
     Model backpackModel("C:/Games/OpenGLTutorial/OpenGLTutorial/textures/backpack/backpack.obj");
+
+    Model bulb("C:/Games/OpenGLTutorial/OpenGLTutorial/textures/bulb/bulb.obj");
 
     // Render Loop
     // ----------------------------------------------
@@ -87,11 +89,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //activate shader
-        lightingShader.use();
         
         ////set material uniforms
         //lightingShader.setUniformFloat("material.shininess", 32.0f);
 
+        lightingShader.use();
         // set dirLight
         lightingShader.setVec3("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
         lightingShader.setVec3("dirLight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
@@ -99,21 +101,22 @@ int main()
         lightingShader.setVec3("dirLight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
 
         //set spotlight
-        lightingShader.setVec3("spotLight.position", camera.Position);
-        lightingShader.setVec3("spotLight.direction", camera.Front);
-        lightingShader.setUniformFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        lightingShader.setUniformFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
-        lightingShader.setVec3("spotLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-        lightingShader.setVec3("spotLight.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-        lightingShader.setVec3("spotLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        lightingShader.setUniformFloat("spotLight.constant", 1.0f);
-        lightingShader.setUniformFloat("spotLight.linear", 0.09f);
-        lightingShader.setUniformFloat("spotLight.quadratic", 0.032f);
+        //lightingShader.setVec3("spotLight.position", camera.Position);
+        //lightingShader.setVec3("spotLight.direction", camera.Front);
+        //lightingShader.setUniformFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        //lightingShader.setUniformFloat("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+        //lightingShader.setVec3("spotLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+        //lightingShader.setVec3("spotLight.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+        //lightingShader.setVec3("spotLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        //lightingShader.setUniformFloat("spotLight.constant", 1.0f);
+        //lightingShader.setUniformFloat("spotLight.linear", 0.09f);
+        //lightingShader.setUniformFloat("spotLight.quadratic", 0.032f);
 
-        //set pointLights
-        //for (unsigned int i = 0; i < pointLightPositions.size(); i++)
+        //glm::vec3 pointlightPos = glm::vec3(0.0f, 0.0f, -2.0f);
+        ////set pointLights
+        //for (unsigned int i = 0; i < 1; i++)
         //{
-        //    lightingShader.setVec3(std::format("pointLights[{}].position", i), pointLightPositions.at(i));
+        //    lightingShader.setVec3(std::format("pointLights[{}].position", i), pointlightPos);
         //    lightingShader.setVec3(std::format("pointLights[{}].ambient", i), glm::vec3(0.2f, 0.2f, 0.2f));
         //    lightingShader.setVec3(std::format("pointLights[{}].diffuse", i), glm::vec3(0.5f, 0.5f, 0.5f));
         //    lightingShader.setVec3(std::format("pointLights[{}].specular", i), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -135,8 +138,17 @@ int main()
 
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.setMat4("model", model);
-        backpackModel.Draw(lightingShader);
-        //render the boxes
+        bulb.Draw(lightingShader);
+
+        //lightSourceShader.use();
+        //lightSourceShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+        //lightSourceShader.setMat4("projection", projection);
+        //lightSourceShader.setMat4("view", view);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, pointlightPos);
+        //model = glm::scale(model, glm::vec3(4.0f));
+        //lightSourceShader.setMat4("model", model);
+        //bulb.Draw(lightSourceShader);
 
         //Imgui related window stuff;
         window.imgui_window->NewFrame();

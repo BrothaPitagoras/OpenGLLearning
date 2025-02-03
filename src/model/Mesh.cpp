@@ -1,11 +1,12 @@
 #include <model/Mesh.hpp>
 #include <shadering/VAO.hpp>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material material)
 {
 	this->vertices = vertices;
 	this->indices = indices;
     this->textures = textures;
+    this->material = material;
 
 	setupMesh();
 }
@@ -47,12 +48,11 @@ void Mesh::setupMesh()
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
-
     // weights
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+
     glBindVertexArray(0);
-	//vao.assignAll(vertices, indices);
 }
 
 void Mesh::Draw(Shader &shader)
@@ -81,6 +81,14 @@ void Mesh::Draw(Shader &shader)
         shader.setUniformInt((name + number).c_str(), i);
         // and finally bind the texture
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
+
+    if (this->material.beingUsed)
+    {
+        shader.setVec3("material.ambient", material.Ambient);
+        shader.setVec3("material.diffuse", material.Diffuse);
+        shader.setVec3("material.specular", material.Specular);
+        shader.setUniformFloat("material.shininess", material.Shininess);
     }
 
     // draw mesh

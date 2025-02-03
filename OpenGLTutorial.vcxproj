@@ -558,6 +558,7 @@
     <ClInclude Include="external_includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\data\data.hpp" />
     <ClInclude Include="includes\includes.h" />
+    <ClInclude Include="includes\model\Material.hpp" />
     <ClInclude Include="includes\model\Model.hpp" />
     <ClInclude Include="includes\model\Texture.hpp" />
     <ClInclude Include="includes\model\Vertex.hpp" />
